@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
 
@@ -48,13 +49,12 @@ class _LoginScreenState extends State<LoginScreen> {
       filter: DevelopmentFilter(),
     );
 
-    final String apiUrl = "";
+    const String apiUrl = "https://qr-pass-service-9363756ce9d4.herokuapp.com/v1/auth/login";
     final String username = usernameController.text;
-    final String password = passwordController.text;
+    final int password = int.parse(passwordController.text);
 
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
     };
 
     final response = await http.post(
@@ -131,7 +131,10 @@ class _LoginScreenState extends State<LoginScreen> {
              Padding(
                padding: EdgeInsets.all(screenHeight/30),
                child: TextField(
-                 controller: passwordController,
+                 controller: passwordController, keyboardType: TextInputType.number, // Set keyboard type to numeric
+                 inputFormatters: <TextInputFormatter>[
+                   FilteringTextInputFormatter.digitsOnly // Allow only numeric input
+                 ],
                  obscureText: obscurePassword,//Hiding feature when entering password.
                  decoration: InputDecoration(
                    hintText: "Şifre",
