@@ -1,4 +1,6 @@
 // login_body.dart
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
@@ -12,6 +14,10 @@ class LoginBody extends StatefulWidget {
 }
 
 class _LoginBodyState extends State<LoginBody> {
+  var logger = Logger(
+    filter: DevelopmentFilter(),
+  );
+
   TextEditingController passwordController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   bool obscurePassword = true;
@@ -27,7 +33,34 @@ class _LoginBodyState extends State<LoginBody> {
     final String username = usernameController.text;
     final int password = int.parse(passwordController.text);
 
-    await ApiService.login(username, password);
+    try {
+      await ApiService.login(username, password);
+      // Successful login, handle the response as needed
+      logger.i('Login Successful');
+      // Navigate to the next screen or perform other actions
+    } catch (error) {
+      // Handle Login failure
+      logger.e('Login Failed: $error');
+
+      // Show error dialog on the screen
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Giriş Başarısız'),
+            content: const Text('Hatalı Kullanıcı Adı veya Şifre!'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
