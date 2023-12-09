@@ -6,7 +6,6 @@ import '../Constants/api_constants.dart';
 
 class ApiService {
   static Future<void> login(String username, int password) async {
-
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
@@ -29,11 +28,16 @@ class ApiService {
       // Store the token locally
       if (token != null) {
         await _storeToken(token);
+        print('******************** $token');
       }
     } else {
       // Handle Login failure
       throw Exception('Login Failed: ${response.statusCode}');
     }
+  }
+
+  static Future<String?> getToken() async {
+    return getStoredToken();
   }
 
   static Future<void> _storeToken(String token) async {
