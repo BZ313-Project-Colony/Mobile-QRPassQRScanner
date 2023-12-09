@@ -1,18 +1,15 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:login_screen/Models/events_model.dart';
 import 'package:login_screen/Services/token_jobs.dart';
 
-import 'Constants/api_constants.dart';
-
-class EtkinlikApi extends StatefulWidget {
-  const EtkinlikApi({super.key});
+class EventApi extends StatefulWidget {
+  const EventApi({super.key});
 
   @override
-  State<EtkinlikApi> createState() => _EtkinlikApiState();
+  State<EventApi> createState() => _EventApiState();
 }
 
-class _EtkinlikApiState extends State<EtkinlikApi> {
+class _EventApiState extends State<EventApi> {
   TokenEventListJobs tokenEventJob = TokenEventListJobs();
   
 
@@ -22,7 +19,7 @@ class _EtkinlikApiState extends State<EtkinlikApi> {
     return Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
-          title: Text("Etkinlikler", style: TextStyle(color: Colors.white)),
+          title: const Text("Etkinlikler", style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.black,
         ),
         body: Center(
@@ -34,19 +31,19 @@ class _EtkinlikApiState extends State<EtkinlikApi> {
                 return ListView.builder(
                   reverse: true,
                   itemBuilder: (BuildContext context, int index) {
-                    var Etk = etknlkList[index];
+                    var event = etknlkList[index];
                     return Card(
-                      margin: EdgeInsets.all(7),
+                      margin: const EdgeInsets.all(7),
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(80),
                       ),
                       child: ListTile(
-                        contentPadding: EdgeInsets.all(10),
+                        contentPadding: const EdgeInsets.all(10),
                         trailing: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [Text(Etk.time.toString())]),
-                        title: Text(Etk.title),
+                            children: [Text(event.time.toString())]),
+                        title: Text(event.title),
                         leading: CircleAvatar(
                           backgroundColor: Colors.black,
                           child: Text(etknlkList[index].toString()),
@@ -58,8 +55,9 @@ class _EtkinlikApiState extends State<EtkinlikApi> {
                 );
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
-              } else
-                return CircularProgressIndicator();
+              } else {
+                return const CircularProgressIndicator();
+              }
               //return Text("Bekleyiniz");
             },
           ),

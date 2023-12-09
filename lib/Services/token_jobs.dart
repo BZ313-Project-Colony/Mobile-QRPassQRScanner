@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:login_screen/Models/events_model.dart';
 import 'package:login_screen/Services/api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../Constants/api_constants.dart';
 import 'token_storage.dart';
 

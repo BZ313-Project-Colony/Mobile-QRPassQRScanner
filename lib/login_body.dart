@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'Event_list_body.dart';
+import 'event_list_body.dart';
 import 'Services/api_service.dart';
 
 class LoginBody extends StatefulWidget {
@@ -41,7 +41,7 @@ class _LoginBodyState extends State<LoginBody> {
       // Navigate to the next screen or perform other actions
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (etkinlikContext) => const EtkinlikApi()),
+        MaterialPageRoute(builder: (etkinlikContext) => const EventApi()),
       );
     } catch (error) {
       // Handle Login failure
