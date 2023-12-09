@@ -24,6 +24,7 @@ class ApiService {
       // Successful login, handle the response as needed
       final Map<String, dynamic> data = jsonDecode(response.body);
       final String? token = data['token'];
+      print(token);
 
       // Store the token locally
       if (token != null) {
