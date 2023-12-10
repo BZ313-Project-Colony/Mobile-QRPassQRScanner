@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_screen/Models/events_model.dart';
 import 'package:login_screen/Services/token_jobs.dart';
+import 'package:login_screen/date_utils.dart';
 
 class EtkinlikApi extends StatefulWidget {
   const EtkinlikApi({super.key});
@@ -41,7 +42,10 @@ class _EtkinlikApiState extends State<EtkinlikApi> {
                         contentPadding: EdgeInsets.all(10),
                         trailing: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [Text(Etk.time.toString())]),
+                            children: [
+                              Text(DateUtilsFunctions.addHoursAndFormat(
+                                  Etk.time.toString()))
+                            ]),
                         title: Text(Etk.title),
                         leading: CircleAvatar(
                           backgroundColor: Colors.black,

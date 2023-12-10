@@ -43,7 +43,8 @@ Future<List> fetchData(String token) async {
     );
 
     if (response.statusCode == 200) {
-      final responseData = json.decode(response.body) as List<dynamic>;
+      final responseData =
+          json.decode(utf8.decode(response.body.codeUnits)) as List<dynamic>;
 
       // Doğrudan EtkinlikModel listesini oluştur
       List<EtkinlikModel> eventList =
