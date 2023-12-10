@@ -1,9 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:login_screen/Models/events_model.dart';
 import 'package:login_screen/Services/token_jobs.dart';
-
-import 'Constants/api_constants.dart';
 
 class EtkinlikApi extends StatefulWidget {
   const EtkinlikApi({super.key});
@@ -14,7 +11,6 @@ class EtkinlikApi extends StatefulWidget {
 
 class _EtkinlikApiState extends State<EtkinlikApi> {
   TokenEventListJobs tokenEventJob = TokenEventListJobs();
-  
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +28,7 @@ class _EtkinlikApiState extends State<EtkinlikApi> {
               if (snapshot.hasData) {
                 var etknlkList = snapshot.data!;
                 return ListView.builder(
-                  reverse: true,
+                  reverse: false,
                   itemBuilder: (BuildContext context, int index) {
                     var Etk = etknlkList[index];
                     return Card(
@@ -49,7 +45,8 @@ class _EtkinlikApiState extends State<EtkinlikApi> {
                         title: Text(Etk.title),
                         leading: CircleAvatar(
                           backgroundColor: Colors.black,
-                          child: Text(etknlkList[index].toString()),
+                          foregroundColor: Colors.white,
+                          child: Text((index + 1).toString()),
                         ),
                       ),
                     );

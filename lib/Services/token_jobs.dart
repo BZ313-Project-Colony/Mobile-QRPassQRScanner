@@ -2,13 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:login_screen/Models/events_model.dart';
 import 'package:login_screen/Services/api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../Constants/api_constants.dart';
 import 'token_storage.dart';
 
 class TokenEventListJobs extends TokenStorage {
-  static const String listToken1 = TokenStorage.tokenKey;
-  //List<EtkinlikModel> eventList = [];
   ApiService api = ApiService();
   //Tokeni Stroragedan aldık
   Future<String?> listToken() async {
@@ -23,15 +20,22 @@ class TokenEventListJobs extends TokenStorage {
   //Listeyi olustumak icin fetchData() fonkisyonunu kulandık
   Future<List<EtkinlikModel>> getEventList() async {
     String? token = await listToken();
-    List<EtkinlikModel> responseData = await fetchData(token ?? '');
-    print("fetcdata token = $token");
-    List<EtkinlikModel> eventList = responseData;
-    print("???? $eventList");
+    List<dynamic> responseData = await fetchData(token ?? '');
+    print("fetchdata token = $token");
+
+    List<EtkinlikModel> eventList =
+        responseData.map((e) => EtkinlikModel.fromMap(e)).toList();
+
+    List<Map<String, dynamic>> eventListMap =
+        eventList.map((e) => e.toMap()).toList();
+
+    print("eventList: $eventListMap");
+    //print("???? $eventList");
     return eventList;
   }
 }
 
-Future<List<EtkinlikModel>> fetchData(String token) async {
+Future<List> fetchData(String token) async {
   try {
     final response = await http.get(
       Uri.parse(ApiConstants.baseUrl + ApiConstants.eventListEndpoint),
@@ -39,21 +43,21 @@ Future<List<EtkinlikModel>> fetchData(String token) async {
     );
 
     if (response.statusCode == 200) {
-      // Başarılı bir cevap
-      final responseData = json.decode(response.body);
-      print("bu ne $responseData");
+      final responseData = json.decode(response.body) as List<dynamic>;
+
+      // Doğrudan EtkinlikModel listesini oluştur
+      List<EtkinlikModel> eventList =
+          responseData.map((map) => EtkinlikModel.fromMap(map)).toList();
+
       return responseData;
     } else if (response.statusCode == 401) {
-      // Token hatası (örneğin, token süresi dolmuş)
-      print('yetkı yok');
+      print('yetki yok');
       return [];
     } else {
-      // Diğer hata durumları
       print('API bozuk: ${response.reasonPhrase}');
       return [];
     }
   } catch (error) {
-    // Genel hata durumları
     print('API isteği başarısız: $error');
     return [];
   }
