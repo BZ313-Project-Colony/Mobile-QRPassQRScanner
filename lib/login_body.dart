@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
+import 'Event_list_body.dart';
 import 'Services/api_service.dart';
 
 class LoginBody extends StatefulWidget {
@@ -38,6 +39,10 @@ class _LoginBodyState extends State<LoginBody> {
       // Successful login, handle the response as needed
       logger.i('Login Successful');
       // Navigate to the next screen or perform other actions
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (etkinlikContext) => const EtkinlikApi()),
+      );
     } catch (error) {
       // Handle Login failure
       logger.e('Login Failed: $error');
@@ -77,7 +82,8 @@ class _LoginBodyState extends State<LoginBody> {
       });
       passwordController.value = passwordController.value.copyWith(
         text: passwordController.text,
-        selection: TextSelection.collapsed(offset: passwordController.text.length),
+        selection:
+            TextSelection.collapsed(offset: passwordController.text.length),
         composing: TextRange.empty,
       );
     }
@@ -104,7 +110,8 @@ class _LoginBodyState extends State<LoginBody> {
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(screenWidth / 70)),
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(screenWidth / 70)),
                   ),
                 ),
               ),
@@ -123,7 +130,8 @@ class _LoginBodyState extends State<LoginBody> {
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(screenWidth / 70)),
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(screenWidth / 70)),
                   ),
                   suffixIcon: IconButton(
                     onPressed: togglePasswordVisibility,
