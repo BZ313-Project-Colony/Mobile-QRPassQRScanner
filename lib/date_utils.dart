@@ -4,7 +4,7 @@ class DateUtilsFunctions{
     DateTime originalDate = DateTime.parse(dateString);
 
     // Add 3 hours
-    DateTime newDate = originalDate.add(Duration(hours: 3));
+    DateTime newDate = originalDate.add(const Duration(hours: 3));
 
     // Format the new date
     String formattedDate = "${newDate.day.toString().padLeft(2, '0')}:"
