@@ -46,9 +46,6 @@ Future<List> fetchData(String token) async {
       final responseData =
           json.decode(utf8.decode(response.body.codeUnits)) as List<dynamic>;
 
-      // Doğrudan EtkinlikModel listesini oluştur
-      List<EtkinlikModel> eventList =
-          responseData.map((map) => EtkinlikModel.fromMap(map)).toList();
 
       return responseData;
     } else if (response.statusCode == 401) {
