@@ -20,8 +20,9 @@ class _EventApiState extends State<EventApi> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Etkinlikler", style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.black,
+        title: const Text("Etkinlikler",
+            style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
       ),
       body: Center(
         child: FutureBuilder<List<EtkinlikModel>>(

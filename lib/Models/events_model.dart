@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final etkinlikModel = etkinlikModelFromMap(jsonString);
-
 import 'dart:convert';
 
 EtkinlikModel etkinlikModelFromMap(String str) =>
@@ -25,19 +21,18 @@ class EtkinlikModel {
   });
 
   factory EtkinlikModel.fromMap(Map<String, dynamic> json) => EtkinlikModel(
-        id: json["id"],
-        title: json["title"],
-        place: json["place"],
-        time: DateTime.parse(json["time"]),
-        isActive: json["isActive"],
-      );
+    id: json["id"],
+    title: json["title"],
+    place: json["place"],
+    time: DateTime.parse(json["time"]),
+    isActive: json["isActive"],
+  );
 
   Map<String, dynamic> toMap() => {
-        "id": id,
-        "title": title,
-        "place": place,
-        "time": (time.toIso8601String()),
-        "isActive": isActive,
-      };
- 
+    "id": id,
+    "title": title,
+    "place": place,
+    "time": time.toIso8601String(),
+    "isActive": isActive,
+  };
 }
