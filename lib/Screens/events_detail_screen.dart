@@ -21,6 +21,15 @@ class EventDetailsPage extends StatelessWidget {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.qr_code),
+            onPressed: () {
+              // Handle QR button press here
+              // You can navigate to the QR screen or perform any other action
+            },
+          ),
+        ],
       ),
       backgroundColor: Colors.black,
       body: Padding(
@@ -79,7 +88,11 @@ class EventDetailsPage extends StatelessWidget {
                     print('Error Description: ${snapshot.error}');
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data == null || snapshot.data!.isEmpty){
-                    return const Text('No participants found.');
+                    return const Text('Katılımcı bulunamadı.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                    ),);
                   } else {
                     final List<ParticipantModel> participants = snapshot.data!;
                     return Column(
