@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'qr_scanner.dart';
 
-class ParticipantUptades {
+class ParticipantUpdates {
   static String p1 = QrScannerState.result;
   static Participant participant = Participant.fromString(p1);
 
@@ -44,7 +44,7 @@ class ParticipantUptades {
     }
   }
 
-  void ticketdisablemApi(Participant participant) async {
+  void ticketDisableApi(Participant participant) async {
     // API endpoint'i (istek kabul olacaksa disable olan url)
     var apiUrl =
         'https://qr-pass-service-9363756ce9d4.herokuapp.com/v1/tickets/disable';

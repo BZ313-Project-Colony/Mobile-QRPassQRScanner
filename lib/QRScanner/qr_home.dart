@@ -18,7 +18,11 @@ class QrHomePage extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => QrScanner(),
+                      builder: (context) => QrScanner(
+                        onQrCodeScanned: (scannedResult) {
+                          // Handle the scanned result here if needed
+                        },
+                      ),
                     ));
               },
               child: Text("Burası"))
