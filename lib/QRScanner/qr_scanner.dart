@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:login_screen/QRScanner/participants.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'participant_uptades.dart';
-//import 'package:url_launcher/url_launcher.dart';
+import 'participant_updates.dart';
 
 class QrScanner extends StatefulWidget {
-  const QrScanner({Key? key}) : super(key: key);
+  final Function(String) onQrCodeScanned;
+
+  const QrScanner({Key? key, required this.onQrCodeScanned}) : super(key: key);
 
   @override
   State<QrScanner> createState() => QrScannerState();
@@ -16,7 +17,7 @@ class QrScannerState extends State<QrScanner> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   static String result = "";
   QRViewController? controller;
-  ParticipantUptades participantUptades = ParticipantUptades();
+  ParticipantUpdates participantUpdates = ParticipantUpdates();
 
   @override
   void dispose() {
@@ -31,9 +32,9 @@ class QrScannerState extends State<QrScanner> {
 
     // Tarayıcı tarafından bulunan her yeni QR kodu için çağrılan dinleyici
     controller.scannedDataStream.listen((scanData) {
-      // State'i güncelle
       setState(() {
         result = scanData.code!;
+        widget.onQrCodeScanned(result); // Notify the parent page
       });
     });
   }
@@ -95,7 +96,7 @@ class QrScannerState extends State<QrScanner> {
                         //İstek basarılı olup kaydetmek istersek apı isteği çalışır
                         String p1 = QrScannerState.result;
                         Participant participant = Participant.fromString(p1);
-                        participantUptades.ticketConfirmApi(participant);
+                        participantUpdates.ticketConfirmApi(participant);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Onaylandı"),
@@ -120,7 +121,7 @@ class QrScannerState extends State<QrScanner> {
                         //İstek basarılı olup daveti kabul etmezsek burdaki apı isteği çalışır
                         String p1 = QrScannerState.result;
                         Participant participant = Participant.fromString(p1);
-                        participantUptades.ticketdisablemApi(participant);
+                        participantUpdates.ticketDisableApi(participant);
                           ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Reddedildi"),

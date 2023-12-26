@@ -8,10 +8,16 @@ import '../Models/participant_model.dart';
 import '../Services/api_service.dart';
 import '../date_utils.dart';
 
-class EventDetailsPage extends StatelessWidget {
+class EventDetailsPage extends StatefulWidget {
   final EtkinlikModel event;
-
   const EventDetailsPage({Key? key, required this.event}) : super(key: key);
+
+  @override
+  _EventDetailsPageState createState() => _EventDetailsPageState();
+}
+
+class _EventDetailsPageState extends State<EventDetailsPage> {
+  List<ParticipantModel> participants = [];
 
   @override
   Widget build(BuildContext context) {
@@ -27,98 +33,124 @@ class EventDetailsPage extends StatelessWidget {
             icon: const Icon(Icons.qr_code),
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>const QrScanner(),
-                  ));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QrScanner(
+                    onQrCodeScanned: (scannedResult) {
+                      _refreshParticipants(widget.event.id);
+                    },
+                  ),
+                ),
+              );
             },
           ),
         ],
       ),
       backgroundColor: Colors.black,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Etkinlik Adı:',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await _refreshParticipants(widget.event.id);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Etkinlik Adı:',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              Text(
-                event.title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
+                Text(
+                  widget.event.title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Tarih ve Saat:',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                const SizedBox(height: 10),
+                const Text(
+                  'Tarih ve Saat:',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              Text(
-                DateUtilsFunctions.addHoursAndFormat(event.time.toString()),
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
+                Text(
+                  DateUtilsFunctions.addHoursAndFormat(widget.event.time.toString()),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Katılımcılar:',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                const SizedBox(height: 20),
+                const Text(
+                  'Katılımcılar:',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              FutureBuilder<List<ParticipantModel>>(
-                future: ApiService.getParticipantsForEvent(event.id),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    print(ApiConstants.baseUrl +
-                        ApiConstants.getTicketsOfEventEndpoint(event.id));
-                    print('Error Description: ${snapshot.error}');
-                    return Text('Error: ${snapshot.error}');
-                  } else if (!snapshot.hasData ||
-                      snapshot.data == null ||
-                      snapshot.data!.isEmpty) {
-                    return const Text(
-                      'Katılımcı bulunamadı.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    );
-                  } else {
-                    final List<ParticipantModel> participants = snapshot.data!;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (final participant in participants)
-                          ParticipantCard(participant: participant),
-                      ],
-                    );
-                  }
-                },
-              ),
-            ],
+                FutureBuilder<List<ParticipantModel>>(
+                  future: ApiService.getParticipantsForEvent(widget.event.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      print(ApiConstants.baseUrl +
+                          ApiConstants.getTicketsOfEventEndpoint(widget.event.id));
+                      print('Error Description: ${snapshot.error}');
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData ||
+                        snapshot.data == null ||
+                        snapshot.data!.isEmpty) {
+                      return const Text(
+                        'Katılımcı bulunamadı.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                      );
+                    } else {
+                      participants = snapshot.data!;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (final participant in participants)
+                            ParticipantCard(participant: participant),
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _refreshParticipants(int eventId) async {
+    try {
+      List<ParticipantModel> updatedParticipants =
+      await ApiService.getParticipantsForEvent(eventId);
+      setState(() {
+        participants = updatedParticipants;
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to refresh participants: $error'),
+        ),
+      );
+    }
   }
 }
 
